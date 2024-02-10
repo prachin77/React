@@ -8,6 +8,7 @@ import { Routes, Route } from "react-router-dom"
 import Header from './components/header'
 import Home from './pages/home'
 import Login from './pages/login'
+import Register from './components/register'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,7 +18,8 @@ function App() {
       <Header />
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/auth' element={<Login />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register/>}/>
       </Routes>
     </>
   )

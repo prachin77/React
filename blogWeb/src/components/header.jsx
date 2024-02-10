@@ -24,8 +24,8 @@ const Header = ({ regMode }) => {
             </ul>
 
             {/* Register button  */}
-            <Link to="/auth" className="bg-black inline-block py-1 px-2 rounded text-white hover:bg-gray-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                Login / register
+            <Link to="/login" className="bg-black inline-block py-1 px-2 rounded text-white hover:bg-gray-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                Login 
             </Link> 
             {/* <Link to="/register">
                 <button
