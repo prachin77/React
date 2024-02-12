@@ -13,37 +13,40 @@ Two official plugins are available:
 
 To seamlessly run this project after cloning and avoid errors, execute the following commands:
 
-### Command 1:
-<!-- ```bash -->
- <!-- npm install react-router-dom  -->
+### Command 1 : to run this project
+ ```bash
+npm run dev
+ ```
+
+### Command 2 :
  ```bash
 npm i react-router-dom
  ```
 
- ### command 2:
+ ### command 3 :
  ```bash
 npm i firebase
  ```
 
- ### command 3: run/execute in your backend folder
+ ### command 4 : run/execute in your backend folder
  ```bash
 npm i express
  ```
- ### command 4: run/execute in your backend folder
+ ### command 5 : run/execute in your backend folder
  ```bash
 npm i mongoose
  ```
- ### command 5:
+ ### command 6 :
  ```bash
 npm i cors
  ```
 
-  ### command 2:
+  ### command 7 :
  ```bash
 npm i axios
  ```
 
-  ### command 2: -g for global installation
+  ### command 8 : -g for global installation
  ```bash
 npm i nodemon -g
  ```
