@@ -43,7 +43,7 @@ npm i cors
 npm i axios
  ```
 
-  ### command 2:
+  ### command 2: -g for global installation
  ```bash
 npm i nodemon -g
  ```
