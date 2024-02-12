@@ -23,9 +23,9 @@ app.use(cors())
 connect("mongodb://127.0.0.1:27017/info")
 
 const userSchema = new mongoose.Schema({
-    id : String ,
+    userid : String ,
     email : String ,
-    password : String 
+    password : String ,
 })
 
 const userModel = mongoose.model("users",userSchema)
@@ -37,24 +37,52 @@ const userModel = mongoose.model("users",userSchema)
 //     .catch(err => res.json(err))
 // })   
 
+
+// REGISTER 
 app.post("/register", (req, res) => {
     console.log("Received registration data:", req.body);
-    const { email, password } = req.body;
-    userModel.create({ email, password })
+    const { userid, email, password } = req.body;
+    userModel.create({ userid, email, password })
     .then(users => res.json(users))
     .catch(err => res.json(err))
 })
 
-
-// app.get("/register", (req, res) => {
-//     // Handle GET requests for the /register endpoint
-//     // This could be used for rendering a registration form or providing information
-
-//     res.send("This is the registration page");
-// });
-
-
 app.get("/register", async (req, res) => {
+    try {
+        // Fetch all users from MongoDB
+        const users = await userModel.find();
+
+        // Send the user data as a JSON response
+        res.json(users);
+    } catch (error) {
+        // Handle any errors that may occur during the database query
+        console.error("Error fetching user data:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+
+
+// LOGIN
+app.post("/login",(req , res) => {
+    const {userid , email , password} = req.body;
+    userModel.findOne({userid})
+    .then(user => {
+        if(user){
+            if(user.password === password){
+                res.json("login succesfull from mongo server")
+            }
+            else{
+                res.json("password incorrect")
+            }
+        }
+        else{
+            res.json("no user record found")
+        }
+    })
+});
+
+app.get("/login", async (req, res) => {
     try {
         // Fetch all users from MongoDB
         const users = await userModel.find();
@@ -74,6 +102,3 @@ app.listen(3001,() => {
 })
 
 
-// app.listen(3001,() => {
-    // console.log("server is running");
-// })

@@ -16,12 +16,20 @@ const Header = ({ regMode }) => {
             </Link>
 
             {/* Navigation links on the right */}
-            <ul className="hidden lg:flex items-center space-x-2 hover:bg-2b2d42 text-white p-2">
+            <ul className="hidden lg:flex items-center space-x-0 hover:bg-2b2d42 text-white p-2">
                 <li><Link to="/" className="text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200" onClick={() => {
                     // You might want to define the setActive function and state
                     // setActive("home");
                 }}>Home</Link></li>
             </ul>
+            <ul className="hidden lg:flex items-center space-x-0 hover:bg-2b2d42 text-white p-2">
+                <li><Link to="/user" className="text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200" onClick={() => {
+                    // You might want to define the setActive function and state
+                    // setActive("home");
+                }}>user</Link></li>
+            </ul>
+            
+
 
             {/* Register button  */}
             <Link to="/login" className="bg-black inline-block py-1 px-2 rounded text-white hover:bg-gray-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">

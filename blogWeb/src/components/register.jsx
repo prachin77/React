@@ -10,7 +10,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
 // react imports
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import Header from "../components/header";
 
 const Register = () => {
@@ -23,41 +23,31 @@ const Register = () => {
     const [logEmail, setLogEmail] = useState("");
     const [logPassword, setLogPassword] = useState("");
 
-    // state to check current user 
-    const [user, setUser] = useState();
-
     const navigate = useNavigate();
 
-    let userIdOfFirebase="";
 
-    onAuthStateChanged(auth, (currentUser) => {
-        setUser(currentUser)
-    });
+    // onAuthStateChanged(auth, (currentUser) => {
+        // setUser(currentUser.uid)
+        // console.log("current user id : ",user);
+        // if (currentUser) {
+        //     setFirebaseUserId(currentUser.uid);  // Set Firebase user ID if the user is authenticated
+        //     console.log("firebase user id : ",firebaseUserId);
+        // }
+    // });
 
     const registerUser = async () => {
         let i;
-        // if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/.test(regPassword)) {
-        //     window.alert("Password must be at least 6 characters long and contain a lowercase, uppercase, digit, and special symbol.");
-        //     return;
-        // }
         try {
-            // Attempt to sign in with the provided email and password
             const userCredential = await signInWithEmailAndPassword(auth, regEmail, regPassword);
-
-            // User already exists (handle appropriately)
             window.alert("User already exists. Please choose a different email or login directly.");
             setRegMode(false);
-        } catch (error) {        
+        } 
+        catch (error) {        
             if (error.code === "auth/user-not-found") {
                 const user = await createUserWithEmailAndPassword(auth, regEmail, regPassword);
                 window.alert("User created successfully!");
-                setRegMode(false); // If applicable, redirect or display success message
+                setRegMode(false); 
             }
-            // else {
-            //     // Handle other errors (e.g., weak password, network issues)
-            //     window.alert("An error occurred. Please try again later.");
-            //     console.error(error);
-            // }
         }
         try {
             if (regPassword.length < 6) {
@@ -71,40 +61,41 @@ const Register = () => {
                 }
             }
 
-            const user = await createUserWithEmailAndPassword(
+            const userRegisterCredential = await createUserWithEmailAndPassword(
                 auth,
                 regEmail,
                 regPassword
             );
-            userIdOfFirebase = auth.currentUser.uid;
+            console.log(userRegisterCredential.user.uid);
             window.alert("user added : ");
-            console.log(userIdOfFirebase)
             setRegMode(false);
             navigate('/login');
+            return userRegisterCredential.user.uid;
         } catch (error) {
             window.alert("error");
         }
     }
-
-    const sendDataToServer = (event) => {
-        // http://localhost:3001/register
-        axios.post('http://localhost:3001/register', {  email : regEmail,  password : regPassword })
+    
+    
+    const sendDataToServer = (value) => {
+        axios.post('http://localhost:3001/register', {  userid : value, email : regEmail,  password : regPassword })
             .then(result => console.log(result))
             .catch(err => console.log(err))
     }
+    
 
     const handleRegButton = async () => {
-        await registerUser(),
-        sendDataToServer()
+        const value = await registerUser();
+        sendDataToServer(value)
     }
-
+    
 
     return (
         <div className="container mx-auto p-8 bg-gray-100 rounded-lg shadow-md max-w-md">
             <h3 class="text-3xl font-bold text-center mb-6 text-black">Register</h3>
             <div class="mb-6">
                 <label for="email" class="block text-sm font-medium text-gray-600">Email</label>
-                <input type="email" id="email" placeholder="Enter email"
+                <input type="email" id="email" placeholder="Enter email" autoComplete="off"
                     class="mt-1 p-3 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     onChange={(event) => {
                         setRegEmail(event.target.value);

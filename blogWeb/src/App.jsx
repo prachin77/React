@@ -9,6 +9,7 @@ import Header from './components/header'
 import Home from './pages/home'
 import Login from './pages/login'
 import Register from './components/register'
+import UserPage from './pages/userPage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -20,6 +21,7 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register/>}/>
+        <Route path='/user' element={<UserPage/>}/>
       </Routes>
     </>
   )

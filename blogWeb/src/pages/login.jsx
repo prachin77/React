@@ -34,93 +34,35 @@ const Login = () => {
         setUser(currentUser)
     });
 
-    // const register = async () => {
-    //     let i;
-    //     // if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/.test(regPassword)) {
-    //     //     window.alert("Password must be at least 6 characters long and contain a lowercase, uppercase, digit, and special symbol.");
-    //     //     return;
-    //     // }
-    //     try {
-    //         // Attempt to sign in with the provided email and password
-    //         const userCredential = await signInWithEmailAndPassword(auth, regEmail, regPassword);
-
-    //         // User already exists (handle appropriately)
-    //         window.alert("User already exists. Please choose a different email or login directly.");
-    //         setRegMode(false); 
-    //     } catch (error) {
-    //         // If sign-in fails, assume it's due to non-existent user and proceed with registration
-    //         if (error.code === "auth/user-not-found") {
-    //             const user = await createUserWithEmailAndPassword(auth, regEmail, regPassword);
-    //             window.alert("User created successfully!");
-    //             setRegMode(false); // If applicable, redirect or display success message
-    //         } 
-    //         // else {
-    //         //     // Handle other errors (e.g., weak password, network issues)
-    //         //     window.alert("An error occurred. Please try again later.");
-    //         //     console.error(error);
-    //         // }
-    //     }
-    //     try {
-    //         if (regPassword.length < 6) {
-    //             window.alert("Password must be at least 6 characters long");
-    //             return;
-    //         }
-    //         for (i = 0; i < regPassword.length; i++) {
-    //             if (regPassword[i] === " ") {
-    //                 window.alert("Password cannot contain spaces");
-    //                 return;
-    //             }
-    //         }
-
-    //         const user = await createUserWithEmailAndPassword(
-    //             auth,
-    //             regEmail,
-    //             regPassword
-    //         );
-    //         window.alert("user added");
-    //         setRegMode(false);  
-    //         setRegEmail("");
-    //         setRegPassword("");
-    //         // <Header {...regMode}/>
-    //         // console.log("user details", user);
-    //         // console.log(auth.currentUser.email);
-    //         // navigate('/home');
-    //     } catch (error) {
-    //         window.alert("error");
-    //     }
-    // }
-
-    const login = async () => {
+    const loginUser = async () => {
         let storeUserInfo = "";
         try {
-            const user = await signInWithEmailAndPassword(
+            const userCredential = await signInWithEmailAndPassword(
                 auth,
                 regEmail,
                 regPassword
             );
+
             window.alert("user logged in 😎")
-            // const userInfo = `User email - ${auth.currentUser.email}, User id - ${auth.currentUser.uid}`;
-            console.log("user details : ", user);
-            navigate("/home");
+            console.log("user details : ", userCredential.user);
+            navigate("/");
+            return userCredential.user.uid;
         } catch (error) {
             window.alert("user not found 😭")
         }
     }
 
-    const logout = async () => {
-
+    const checkUserFromDatabase = (value) => {
+        axios.post("http://localhost:3001/login",{userid : value , email : regEmail , password : regPassword})
+        .then(result => console.log(result))
+        .catch(err => console.log(err))
     }
 
-    // const sendDataToServer = (event) => {
-    //     axios.post('http:localhost:3001/register',{email : regEmail , password : regPassword})
-    //     .then(result => console.log(result))
-    //     .catch(err => console.log(err))
-    // }
+    const handleLoginButton = async () => {
+        const value = await loginUser();
+        checkUserFromDatabase(value)
+    }
 
-    // const handleRegButton = async () =>{
-    //     await register(),
-    //     sendDataToServer
-    // }
 
     return (
 
@@ -150,16 +92,10 @@ const Login = () => {
                     }}
                 />
             </div>
-            <button onClick={login}
+            <button onClick={handleLoginButton}
                 className="bg-black text-white py-3 px-6 rounded hover:bg-gray-600 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-800 mr-5">
                 Login
             </button>
-            {/* <button onClick={handleRegButton}
-                className="bg-black text-white py-3 px-6 rounded hover:bg-gray-600 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-800 ">
-                Register
-            </button>
-            <Header /> */}
-            {/* {auth.email+" "+auth.uid+" "+auth.regPassword} */}
         </div>
 
     );
