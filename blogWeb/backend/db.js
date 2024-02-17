@@ -24,25 +24,20 @@ connect("mongodb://127.0.0.1:27017/info")
 
 const userSchema = new mongoose.Schema({
     userid : String ,
+    username : String,
     email : String ,
     password : String ,
 })
 
 const userModel = mongoose.model("users",userSchema)
 
-// app.post("/register",(req , res) => {
-//     console.log("Received registration data:", req.body);
-//     userModel.create(req.body)
-//     .then(users => res.json(users))
-//     .catch(err => res.json(err))
-// })   
-
 
 // REGISTER 
 app.post("/register", (req, res) => {
+    console.log(req.body)
     console.log("Received registration data:", req.body);
-    const { userid, email, password } = req.body;
-    userModel.create({ userid, email, password })
+    const { username , email, password } = req.body;
+    userModel.create({ username , email, password })
     .then(users => res.json(users))
     .catch(err => res.json(err))
 })
@@ -64,23 +59,42 @@ app.get("/register", async (req, res) => {
 
 
 // LOGIN
-app.post("/login",(req , res) => {
-    const {userid , email , password} = req.body;
-    userModel.findOne({userid})
-    .then(user => {
-        if(user){
-            if(user.password === password){
-                res.json("login succesfull from mongo server")
-            }
-            else{
-                res.json("password incorrect")
-            }
+// app.post("/login", async (req, res) => {
+//     try {
+//         const { email, password } = req.body;
+//         // Adjust the query based on your user model structure
+//         const user = await userModel.findOne({ email, password });
+//         if (user) {
+//             console.log("user from mongodb = ",user)
+//             console.log("username from mongodb : ",user.username);
+//             res.json({ username: user.username });
+//         } else {
+//             res.status(404).json({ error: "User not found" });
+//         }
+//     } catch (error) {
+//         console.error("Error logging in:", error);
+//         res.status(500).json({ error: "Internal Server Error" });
+//     }
+// });
+// LOGIN
+app.post("/login", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await userModel.findOne({ email, password });
+        if (user) {
+            console.log("user from mongodb = ", user);
+            console.log("username from mongodb : ", user.username);
+            res.json({ username: user.username, email: user.email , password : user.password});
+        } else {
+            res.status(404).json({ error: "User not found" });
         }
-        else{
-            res.json("no user record found")
-        }
-    })
+    } catch (error) {
+        console.error("Error logging in:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 });
+
+
 
 app.get("/login", async (req, res) => {
     try {
@@ -95,6 +109,7 @@ app.get("/login", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
 
 
 app.listen(3001,() => {

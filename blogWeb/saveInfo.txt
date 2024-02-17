@@ -1,90 +1,83 @@
 mongodb string : mongodb://localhost:27017
 
+user image link : <a href="https://www.flaticon.com/free-icons/user" title="user icons"></a>
 
-# register 2nd code :
-// Other imports...
 
-const Register = () => {
-    // State and other declarations...
-
-    const [firebaseUserId, setFirebaseUserId] = useState("");  // Fixed variable declaration
-
-    onAuthStateChanged(auth, (currentUser) => {
-        setUser(currentUser);
-        if (currentUser) {
-            setFirebaseUserId(currentUser.uid);  // Set Firebase user ID if the user is authenticated
-        }
-    });
-
-    const registerUser = async () => {
-        try {
-            const userCredential = await signInWithEmailAndPassword(auth, regEmail, regPassword);
-
-            // User already exists (handle appropriately)
-            window.alert("User already exists. Please choose a different email or login directly.");
-            setRegMode(false);
-        } catch (error) {
-            if (error.code === "auth/user-not-found") {
-                try {
-                    if (regPassword.length < 6) {
-                        window.alert("Password must be at least 6 characters long");
-                        return;
-                    }
-                    for (let i = 0; i < regPassword.length; i++) {
-                        if (regPassword[i] === " ") {
-                            window.alert("Password cannot contain spaces");
-                            return;
-                        }
-                    }
-
-                    const user = await createUserWithEmailAndPassword(auth, regEmail, regPassword);
-
-                    window.alert("User created successfully!");
-                    console.log(user.uid);  // Log the user's UID
-                    sendDataToServer(user.uid);  // Send data to the server after user creation
-
-                    setRegMode(false); // If applicable, redirect or display success message
-                    navigate('/login');
-                } catch (error) {
-                    window.alert("An error occurred. Please try again later.");
-                    console.error(error);
-                }
-            } else {
-                // Handle other errors (e.g., weak password, network issues)
-                window.alert("An error occurred. Please try again later.");
-                console.error(error);
-            }
-        }
-    };
-
-    const sendDataToServer = async (userIdOfFirebase) => {
-        try {
-            await axios.post('http://localhost:3001/register', {
-                userId: userIdOfFirebase,
-                email: regEmail,
-                password: regPassword,
-            });
-            console.log("Data sent to server successfully!");
-        } catch (error) {
-            console.error("Error sending data to server:", error);
-        }
-    };
-
-    const handleRegButton = async () => {
-        await registerUser();
-        // No need to call registerUser() again here
-    };
-
-    // JSX and UI rendering...
-
-    return (
-        <div className="container mx-auto p-8 bg-gray-100 rounded-lg shadow-md max-w-md">
-            {/* ... */}
-            <button onClick={handleRegButton} className="bg-black text-white py-3 px-6 rounded hover:bg-gray-600 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-800">
-                Register
-            </button>
-        </div>
-    );
+const sendDataToServer = (value) => {
+        axios.post('http://localhost:3001/register', { username : userName , email : regEmail,  password : regPassword })
+            .then(result => console.log(result))
+            .catch(err => console.log(err))
 }
 
-export default Register;
+const checkUserFromDatabase = (value) => {
+        axios.post("http://localhost:3001/login",{ email : regEmail , password : regPassword})
+        .then(result => {
+            setFrontendUserName(result.data.username)
+            setIsLogin(false)
+            // frontendUserName = result.data.username;
+            // window.alert("username from coming from backend and printed in fronted = ",{frontendUserName})
+            console.log("username from fronted = ",result.data.username)
+        })
+        .catch(err => console.log(err))
+}
+
+const loginUser = async () => {
+        let storeUserInfo = "";
+        try {
+            const userCredential = await signInWithEmailAndPassword(
+                auth,
+                regEmail,
+                regPassword
+            );
+
+            window.alert("user logged in 😎")
+            console.log("user details : ", userCredential.user);
+            navigate("/");
+            return userCredential.user.uid;
+        } catch (error) {
+            window.alert("user not found 😭")
+        }
+}
+
+const registerUser = async () => {
+        let i;
+        try {
+            const {userCredential} = await signInWithEmailAndPassword(auth, regEmail, regPassword);
+            await updateProfile(userCredential.user,{displayName : userName});
+            console.log(userName);
+            window.alert("User already exists. Please choose a different email or login directly.");
+            setRegMode(false);
+        } 
+        catch (error) {        
+            if (error.code === "auth/user-not-found") {
+                const user = await createUserWithEmailAndPassword(auth, regEmail, regPassword);
+                window.alert("User created successfully!");
+                setRegMode(false); 
+            }
+        }
+        try {
+            if (regPassword.length < 6) {
+                window.alert("Password must be at least 6 characters long");
+                return;
+            }
+            for (i = 0; i < regPassword.length; i++) {
+                if (regPassword[i] === " ") {
+                    window.alert("Password cannot contain spaces");
+                    return;
+                }
+            }
+
+            const userRegisterCredential = await createUserWithEmailAndPassword(
+                auth,
+                regEmail,
+                regPassword
+            );
+            console.log(userRegisterCredential.user.uid);
+            window.alert("user added : ");
+            setRegMode(false);
+            navigate('/login');
+            return userRegisterCredential.user.uid;
+        } catch (error) {
+            window.alert("error");
+        }
+    }
