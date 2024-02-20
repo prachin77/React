@@ -108,7 +108,7 @@ const Auth = () => {
                     {signUp && (
                         <>
                             <div>
-                                <label htmlFor="username">Username</label>
+                                {/* <label htmlFor="username">Username</label> */}
                                 <input
                                     type="text"
                                     className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
@@ -122,7 +122,7 @@ const Auth = () => {
                     )}
                     {/* email field  */}
                     <div>
-                        <label htmlFor="email">Email</label>
+                        {/* <label htmlFor="email">Email</label> */}
                         <input
                             type="email"
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
@@ -133,7 +133,7 @@ const Auth = () => {
                         />
                     </div>
                     {/* password field  */}
-                    <label htmlFor="password">Password</label>
+                    {/* <label htmlFor="password">Password</label> */}
                     <div>
                         <input
                             type="password"

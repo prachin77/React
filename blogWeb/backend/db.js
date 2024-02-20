@@ -56,26 +56,6 @@ app.get("/register", async (req, res) => {
     }
 });
 
-
-
-// LOGIN
-// app.post("/login", async (req, res) => {
-//     try {
-//         const { email, password } = req.body;
-//         // Adjust the query based on your user model structure
-//         const user = await userModel.findOne({ email, password });
-//         if (user) {
-//             console.log("user from mongodb = ",user)
-//             console.log("username from mongodb : ",user.username);
-//             res.json({ username: user.username });
-//         } else {
-//             res.status(404).json({ error: "User not found" });
-//         }
-//     } catch (error) {
-//         console.error("Error logging in:", error);
-//         res.status(500).json({ error: "Internal Server Error" });
-//     }
-// });
 // LOGIN
 app.post("/login", async (req, res) => {
     try {
